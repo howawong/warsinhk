@@ -7,32 +7,61 @@ import { graphql } from "gatsby"
 import EpidemicChart from "@/components/charts/StackedBarChart"
 
 const ChartsPage = ({ data, location }) => {
-  const { t } = useTranslation()
+  const listDate = []
+  const startDate = "2020-01-18"
+  const date1 = new Date(startDate)
+  const date2 = new Date()
+  const diffTime = Math.abs(date2 - date1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  const dateMove = new Date(startDate)
+  const strDate = startDate
+  let d = startDate
+  let k = diffDays
+  while (k > 0){
+    d = dateMove.toISOString().slice(0,10)
+    console.log(d)
+    listDate.push(d)
+    dateMove.setDate(dateMove.getDate()+1)
+    k--
+  }
 
+  console.log(listDate)
+  const { t } = useTranslation()
+  const transformedInitialData = listDate.reduce((result, d) => {
+    result[d] = {
+      imported: 0, 
+      imported_close_contact:0, 
+      local_possibly: 0,
+      local: 0,
+      local_close_contact: 0,
+      local_possibly_close_contact: 0,
+      label: d
+    }
+    return result
+  },{})
+  const transformedData = data.allWarsCase.edges.reduce((result, {node}) => {
+    if (node.classification != "-" && node.onset_date.toLowerCase() != "asymptomatic") {
+      result[node.onset_date][node.classification]++
+    }
+    return result
+  }, transformedInitialData)
   return (
     <Layout noPadding={true}>
       <SEO title="Charts" />
-      <Typography variant="h2">{t("charts.title")}</Typography>
+      <Typography variant="h2">{t("epidemic.title")}</Typography>
       <EpidemicChart
         keys={[
           "imported",
-          "possibly_local",
+          "imported_close_contact",
           "local",
-          "close_contact_of_imported_case",
+          "local_close_contact",
+          "local_possibly",
+          "local_possibly_close_contact"
         ]}
         keyToLabel={key => {
           return t(`epidemic_chart.key_${key}`)
         }}
-        data={data.allEpidemicData.edges.map(({ node }) => ({
-          label: node.first_symptions_date,
-          imported: parseInt(node.imported),
-          possibly_local: parseInt(node.possibly_local),
-          local: parseInt(node.local),
-          close_contact_of_imported_case: parseInt(
-            node.close_contact_of_imported_case
-          ),
-          total: parseInt(node.total),
-        }))}
+        data={Object.values(transformedData)}
       />
     </Layout>
   )
@@ -42,15 +71,32 @@ export default ChartsPage
 
 export const ChartsQuery = graphql`
   query {
-    allEpidemicData {
+    allWarsCase(
+      sort: { order: DESC, fields: case_no }
+      filter: { enabled: { eq: "Y" } }
+    ) {
       edges {
         node {
-          first_symptions_date
-          imported
-          possibly_local
-          local
-          close_contact_of_imported_case
-          total
+          case_no
+          onset_date
+          confirmation_date
+          gender
+          age
+          hospital_zh
+          hospital_en
+          status
+          status_zh
+          status_en
+          type_zh
+          type_en
+          citizenship_zh
+          citizenship_en
+          detail_zh
+          detail_en
+          classification
+          classification_zh
+          classification_en
+          source_url
         }
       }
     }

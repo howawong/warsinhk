@@ -356,8 +356,8 @@ export default HighRiskPage
 export const HighRiskQuery = graphql`
   query {
     allWarsCaseLocation(
-      filter: { enabled: { eq: "Y" } }
       sort: { order: DESC, fields: end_date }
+      filter: { action_zh: { ne: "求醫" } }
     ) {
       edges {
         node {
@@ -372,8 +372,8 @@ export const HighRiskQuery = graphql`
           remarks_zh
           source_url_1
           source_url_2
-          start_date(formatString: "YYYY-MM-DD")
-          end_date(formatString: "YYYY-MM-DD")
+          start_date
+          end_date
           lat
           lng
           type

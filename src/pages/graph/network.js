@@ -132,7 +132,6 @@ const ChartsPage = ({ data, location }) => {
       <Typography variant="h2">{t("charts.title")}</Typography>
       <NetworkGraph
         data={getDataForChart(
-          data.allWarsCase.edges,
           data.allWarsCaseRelation.edges
         )}
       />
@@ -167,18 +166,6 @@ export const ChartsQuery = graphql`
           classification_zh
           classification_en
           source_url
-        }
-      }
-    }
-    allWarsCaseRelation {
-      edges {
-        node {
-          from_case_no
-          to_case_no
-          relationship_zh
-          relationship_en
-          group_zh
-          group_en
         }
       }
     }

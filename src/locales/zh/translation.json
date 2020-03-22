@@ -134,5 +134,14 @@
   "epidemic_chart.key_local": "本地感染",
   "epidemic_chart.key_close_contact_of_imported_case": "輸入有關",
   "relation_chart.key_local": "本地個案",
-  "relation_chart.key_imported": "輸入個案"
+  "relation_chart.key_imported": "輸入個案",
+  "epidemic.title": "流行病學曲線圖",
+  "epidemic.xAxis": "日期",
+  "epidemic.yAxis": "病例",
+  "epidemic.imported": "輸入個案",
+  "epidemic.imported_close_contact": "輸入個案的密切接觸者",
+  "epidemic.local": "本地個案",
+  "epidemic.local_close_contact": "本地個案的密切接觸者",
+  "epidemic.local_possibly": "可能本地個案",
+  "epidemic.local_possibly_close_contact": "可能本地個案的密切接觸者"
 }
